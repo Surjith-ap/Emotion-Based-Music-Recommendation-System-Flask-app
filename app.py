@@ -1,27 +1,16 @@
-from flask import Flask, render_template, request
-from deepface import DeepFace
-import os
+from flask import Flask
+from routes.auth_routes import auth_bp
+from routes.emotion_routes import emotion_bp
+from routes.home_routes import home_bp
+from utils.supabase_client import supabase
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.secret_key = "your-secret-key"
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+# Register Blueprints (modular routes)
+app.register_blueprint(auth_bp)
+app.register_blueprint(emotion_bp)
+app.register_blueprint(home_bp)
 
-@app.route('/analyze', methods=['POST'])
-def analyze():
-    file = request.files['file']
-    if file:
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(filepath)
-
-        # Analyze emotions
-        result = DeepFace.analyze(img_path=filepath, actions=['emotion'])
-        dominant_emotion = result[0]['dominant_emotion']
-
-        return render_template('index.html', emotion=dominant_emotion, image_path=filepath)
-    return render_template('index.html', emotion="No file uploaded")
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
