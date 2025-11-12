@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DeepFace Emotion Detection</title>
+  <style>
+    body { text-align: center; font-family: Arial; margin-top: 50px; }
+    img { width: 200px; margin-top: 20px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1> Emotion Detection using DeepFace</h1>
+  <form action="/analyze" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*" required>
+    <button type="submit">Analyze Emotion</button>
+  </form>
+
+  {% if emotion %}
+    <h2>Detected Emotion: {{ emotion }}</h2>
+    <img src="{{ image_path }}" alt="Uploaded Image">
+  {% endif %}
+</body>
+</html>
